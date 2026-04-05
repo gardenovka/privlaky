@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chata Přívlaky | Rezidence u Sázavy</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #1e3325;
+            --accent: #c29970;
+            --bg: #fdfdfb;
+            --panel: #ffffff;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --free-bg: #e2f3e4; 
+            --free-text: #166534; 
+            --booked-bg: #f1f5f9;
+            --booked-text: #94a3b8;
+            --radius: 24px;
+            --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+
+        /* --- NAVIGACE --- */
+        nav {
+            position: fixed; top: 0; width: 100%; height: 90px;
+            background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(20px);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 8%; z-index: 2000; border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        .logo { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--primary); font-weight: 900; cursor: pointer; letter-spacing: -0.5px; }
+        .nav-links { display: flex; gap: 35px; list-style: none; }
+        .nav-links a { text-decoration: none; color: var(--text); font-weight: 600; font-size: 0.85rem; cursor: pointer; text-transform: uppercase; letter-spacing: 1.5px; transition: 0.3s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--accent); }
+
+        /* --- STRÁNKY --- */
+        .page { display: none; min-height: 100vh; animation: fadeIn 0.8s ease; padding-top: 90px; }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- HERO --- */
+        .hero {
+            height: 80vh; margin: 20px; border-radius: var(--radius);
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.2)), 
+                        url('https://privlaky.cz/wp-content/uploads/2021/09/chata-privlaky-293b-1-2.jpg') center/cover;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; text-align: center;
+        }
+        .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(3rem, 7vw, 5.5rem); margin-bottom: 10px; }
+
+        /* --- OBSAH --- */
+        .container { max-width: 1200px; margin: 0 auto; padding: 80px 20px; }
+        .section-header { text-align: center; margin-bottom: 60px; }
+        .section-header h2 { font-family: 'Playfair Display', serif; font-size: 3.5rem; color: var(--primary); line-height: 1.1; }
+
+        .feature-block { display: flex; gap: 80px; align-items: center; margin-bottom: 120px; }
+        .feature-block.reverse { flex-direction: row-reverse; }
+        .feature-img { flex: 1.2; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); height: 450px; }
+        .feature-img img { width: 100%; height: 100%; object-fit: cover; }
+        .feature-text { flex: 1; }
+        .feature-text h3 { font-family: 'Playfair Display', serif; font-size: 2.2rem; margin-bottom: 20px; color: var(--accent); }
+
+        /* --- CENÍK (UPRAVENÝ) --- */
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; margin-bottom: 40px; }
+        .price-card { background: white; padding: 40px; border-radius: var(--radius); box-shadow: var(--shadow); }
+        .price-card h3 { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--primary); margin-bottom: 25px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+        .p-item { display: flex; justify-content: space-between; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px dashed #f1f5f9; }
+        .p-item:last-child { border: none; }
+        .p-label { font-weight: 600; color: var(--text); }
+        .p-val { font-weight: 800; color: var(--primary); white-space: nowrap; }
+        .p-sub { display: block; font-size: 0.8rem; color: var(--text-muted); font-weight: 400; margin-top: 2px; }
+        .p-tag { font-size: 0.7rem; padding: 3px 8px; border-radius: 4px; background: #f1f5f9; color: var(--text-muted); vertical-align: middle; margin-left: 5px; }
+        .booked-tag { background: #fee2e2; color: #b91c1c; }
+        .free-tag { background: #dcfce7; color: #15803d; }
+
+        /* --- KALENDÁŘ --- */
+        .cal-box { background: white; padding: 40px; border-radius: var(--radius); box-shadow: var(--shadow); }
+        .cal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .month-header { background: var(--primary); color: white; padding: 15px; text-align: center; font-weight: 700; border-radius: 12px 12px 0 0; }
+        .days-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; padding: 20px; border: 1px solid #eee; border-radius: 0 0 12px 12px; }
+        .d-cell { aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center; font-weight: 700; border-radius: 8px; font-size: 0.9rem; }
+        .free { background: var(--free-bg); color: var(--free-text); }
+        .booked { background: var(--booked-bg); color: var(--booked-text); text-decoration: line-through; }
+
+        /* --- KONTAKT --- */
+        .contact-layout { display: grid; grid-template-columns: 0.7fr 1.3fr; gap: 40px; }
+        .contact-card-unified { background: var(--primary); color: white; padding: 50px; border-radius: var(--radius); height: fit-content; }
+        .contact-card-unified h3 { font-family: 'Playfair Display', serif; font-size: 2.2rem; margin-bottom: 35px; }
+        .contact-group { margin-bottom: 30px; }
+        .contact-group-label { display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: var(--accent); font-weight: 700; margin-bottom: 12px; }
+        .contact-link { color: white; text-decoration: none; font-size: 1.25rem; font-weight: 600; display: block; margin-bottom: 5px; }
+        .contact-text { font-size: 1.1rem; color: #cbd5e1; }
+
+        .form-side { background: white; padding: 50px; border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid #f1f5f9; }
+        .form-info-text { margin-bottom: 30px; color: var(--text-muted); font-size: 0.95rem; border-left: 3px solid var(--accent); padding-left: 20px; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .form-group.full { grid-column: span 2; }
+        .form-label { font-size: 0.85rem; font-weight: 700; margin-bottom: 8px; color: var(--primary); display: block; }
+        .form-input { width: 100%; padding: 14px; border: 1px solid #e2e8f0; border-radius: 12px; font-family: inherit; }
+        .btn-send { width: 100%; padding: 18px; background: var(--primary); color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; text-transform: uppercase; margin-top: 10px; }
+
+        footer { background: #0f172a; color: white; padding: 40px; text-align: center; margin-top: 80px; }
+
+        @media (max-width: 900px) { 
+            .feature-block, .feature-block.reverse, .pricing-grid, .cal-grid, .contact-layout, .form-grid { display: flex; flex-direction: column; } 
+            .feature-img { height: 300px; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="logo" onclick="showPage('home')">Chata Přívlaky</div>
+    <ul class="nav-links">
+        <li><a onclick="showPage('home')" id="link-home">Domů</a></li>
+        <li><a onclick="showPage('info')" id="link-info">Váš úkryt</a></li>
+        <li><a onclick="showPage('wellness')" id="link-wellness">Wellness</a></li>
+        <li><a onclick="showPage('cenik')" id="link-cenik">Ceník</a></li>
+        <li><a onclick="showPage('rezervace')" id="link-rezervace">Rezervace</a></li>
+        <li><a onclick="showPage('kontakt')" id="link-kontakt">Kontakt</a></li>
+    </ul>
+</nav>
+
+<section id="home" class="page active" style="padding-top: 10px;">
+    <div class="hero">
+        <h1>Únik k řece Sázavě</h1>
+        <p>Stylová rezidence pro 8 osob se saunou a vířivkou.</p>
+    </div>
+    <div class="container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: -100px;">
+        <div class="price-card" style="text-align:center; cursor:pointer;" onclick="showPage('info')">
+            <h3>Kapacita</h3>
+            <p>8 osob • 3 ložnice • 2 podlaží • monumentální krb</p>
+        </div>
+        <div class="price-card" style="text-align:center; cursor:pointer;" onclick="showPage('wellness')">
+            <h3>Relaxace</h3>
+            <p>Finská sauna a venkovní vířivka přímo u břehu.</p>
+        </div>
+        <div class="price-card" style="text-align:center; cursor:pointer;" onclick="showPage('rezervace')">
+            <h3>Celoroční provoz</h3>
+            <p>Rezervujte si svůj termín pro rok 2026 právě nyní.</p>
+        </div>
+    </div>
+</section>
+
+<section id="info" class="page">
+    <div class="container">
+        <div class="section-header"><h2>Stylové ubytování</h2></div>
+        <div class="feature-block">
+            <div class="feature-img"><img src="https://privlaky.cz/wp-content/uploads/2021/09/obyvaci-pokoj-s-krbem-1b79-.jpg"></div>
+            <div class="feature-text">
+                <h3>Domov u plynoucí vody</h3>
+                <p>Chata se nachází na samém konci vesnice Přívlaky. Interiér je rozdělen do dvou podlaží. V přízemí najdete ložnici se třemi lůžky (herní kout). V prvním patře se pak nacházejí dvě samostatné ložnice s manželskými postelemi a přistýlkami.</p>
+                <p>Celý objekt je vytápěn elektricky, srdcem chaty je však monumentální krb v obývacím pokoji.</p>
+            </div>
+        </div>
+        <div class="feature-block reverse">
+            <div class="feature-img"><img src="https://privlaky.cz/wp-content/uploads/2021/09/venkovni-posezeni-s-grilem-a-pizza-peci-37c3-.jpg"></div>
+            <div class="feature-text">
+                <h3>Gastronomie a okolí</h3>
+                <p>Venkovní posezení s profesionální zděnou pecí na pizzu a grilem. Zahrada je oplocená a udržovaná, ideální pro děti a domácí mazlíčky. K dispozici je člun k zapůjčení pro plavby po Sázavě.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="wellness" class="page">
+    <div class="container">
+        <div class="section-header"><h2>Vaše soukromé lázně</h2></div>
+        <div class="feature-block">
+            <div class="feature-img"><img src="https://privlaky.cz/wp-content/uploads/2025/03/privlaky-sauna_3.jpeg"></div>
+            <div class="feature-text">
+                <h3>Finská sauna</h3>
+                <p>Dopřejte si rituál saunování s výhledem do přírody. Za jednorázový poplatek 2.000 Kč získáte neomezený přístup po celou dobu pobytu, včetně zapůjčení ručníků a županů.</p>
+            </div>
+        </div>
+        <div class="feature-block reverse">
+            <div class="feature-img"><img src="https://privlaky.cz/wp-content/uploads/2021/09/virivka-7098-1-2.jpg"></div>
+            <div class="feature-text">
+                <h3>Koupací sud s vířivkou</h3>
+                <p>Venkovní vířivka je ideálním místem pro sledování noční oblohy v horké vodě. Masážní trysky pomohou regeneraci těla přímo na terase chaty.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="cenik" class="page">
+    <div class="container">
+        <div class="section-header">
+            <h2>Ceník ubytování</h2>
+            <p>Kapacita 8 osob • 3 ložnice • Minimální délka 2 noci</p>
+        </div>
+        
+        <div class="pricing-grid">
+            <div class="price-card">
+                <h3>Standardní pobyty</h3>
+                <div class="p-item">
+                    <div class="p-label">Cena za noc<span class="p-sub">Celá chata (Letní / Zimní / Mimo sezónu)</span></div>
+                    <div class="p-val">5.000 Kč</div>
+                </div>
+                <div class="p-item">
+                    <div class="p-label">Cena za víkend<span class="p-sub">Pátek – Neděle</span></div>
+                    <div class="p-val">10.000 Kč</div>
+                </div>
+                <div style="margin-top: 20px; font-size: 0.85rem; color: var(--text-muted);">
+                    * Letní sezóna: 1.6. – 30.9.<br>
+                    * Zimní sezóna: 1.10. – 1.3.
+                </div>
+            </div>
+
+            <div class="price-card">
+                <h3>Vánoce a Silvestr 2026</h3>
+                <div class="p-item">
+                    <div class="p-label">Vánoce na chatě <span class="free-tag">VOLNO</span><span class="p-sub">19.12. – 26.12. (7 nocí)</span></div>
+                    <div class="p-val">45.000 Kč</div>
+                </div>
+                <div class="p-item">
+                    <div class="p-label">Silvestr I <span class="booked-tag">OBSAZENO</span><span class="p-sub">26.12. – 2.1.2027 (7 nocí)</span></div>
+                    <div class="p-val">45.000 Kč</div>
+                </div>
+                <div class="p-item">
+                    <div class="p-label">Silvestr II <span class="booked-tag">OBSAZENO</span><span class="p-sub">29.12. – 2.1.2027 (4 noci)</span></div>
+                    <div class="p-val">26.000 Kč</div>
+                </div>
+                <div class="p-item">
+                    <div class="p-label">Pohodový konec roku<span class="p-sub">19.12. – 2.1.2027 (14 nocí)</span></div>
+                    <div class="p-val">90.000 Kč</div>
+                </div>
+            </div>
+
+            <div class="price-card">
+                <h3>Cena zahrnuje</h3>
+                <div class="p-item"><div class="p-label">Vybavení, lůžkoviny, ručníky</div><div class="p-val">V CENĚ</div></div>
+                <div class="p-item"><div class="p-label">Wi-Fi a parkování u domu</div><div class="p-val">V CENĚ</div></div>
+                <div class="p-item"><div class="p-label">Spotřeba vody</div><div class="p-val">V CENĚ</div></div>
+                <div class="p-item"><div class="p-label">Palivové dřevo (rozumné množství)</div><div class="p-val">V CENĚ</div></div>
+            </div>
+
+            <div class="price-card">
+                <h3>Doplňkové služby</h3>
+                <div class="p-item">
+                    <div class="p-label">Wellness balíček<span class="p-sub">Neomezeně sauna + vířivka + župany</span></div>
+                    <div class="p-val">2.000 Kč</div>
+                </div>
+                <div class="p-item">
+                    <div class="p-label">Závěrečný úklid</div>
+                    <div class="p-val">1.300 Kč</div>
+                </div>
+                <div class="p-item">
+                    <div class="p-label">Elektřina</div>
+                    <div class="p-val">5 Kč / kWh</div>
+                </div>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 10px;">* Neúměrná spotřeba topného dřeva může být zpoplatněna dle uvážení majitele.</p>
+            </div>
+
+            <div class="price-card" style="grid-column: span 1;">
+                <h3>Platební a storno podmínky</h3>
+                <div class="p-item"><div class="p-label">Záloha při rezervaci</div><div class="p-val">50 %</div></div>
+                <div class="p-item"><div class="p-label">Doplatek při příjezdu</div><div class="p-val">Hotově</div></div>
+                <div style="margin-top: 15px; font-size: 0.85rem;">
+                    <strong>Storno poplatky ze zálohy:</strong><br>
+                    • 40+ dní předem: 0 % (vratná v plné výši)<br>
+                    • 14–39 dní předem: 50 %<br>
+                    • 0–13 dní předem: 100 % (záloha propadá)
+                </div>
+            </div>
+
+            <div class="price-card">
+                <h3>Důležité informace</h3>
+                <div class="p-item"><div class="p-label">Nástup na ubytování</div><div class="p-val">14:00</div></div>
+                <div class="p-item"><div class="p-label">Ukončení pobytu</div><div class="p-val">10:00</div></div>
+                <p style="margin-top: 15px; font-size: 0.85rem; color: var(--text-muted);">
+                    Speciální požadavky (počet nocí, počet osob) jsou po dohodě možné. Majitelé si vyhrazují právo na změnu cen.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="rezervace" class="page">
+    <div class="container">
+        <div class="section-header"><h2>Obsazenost 2026</h2></div>
+        <div class="cal-box"><div id="calendar-container" class="cal-grid"></div></div>
+    </div>
+</section>
+
+<section id="kontakt" class="page">
+    <div class="container">
+        <div class="section-header"><h2>Kontaktujte nás</h2></div>
+        <div class="contact-layout">
+            <div class="contact-card-unified">
+                <h3>Rezervace</h3>
+                <div class="contact-group">
+                    <span class="contact-group-label">Telefony na majitele</span>
+                    <a href="tel:736534615" class="contact-link">736 534 615</a>
+                    <a href="tel:739000808" class="contact-link">739 000 808</a>
+                </div>
+                <div class="contact-group">
+                    <span class="contact-group-label">Adresa objektu</span>
+                    <span class="contact-text">Přívlaky u Sázavy<br>285 06 Samopše</span>
+                </div>
+            </div>
+            <div class="form-side">
+                <form class="form-grid">
+                    <div class="form-group"><label class="form-label">Jméno</label><input type="text" class="form-input" required></div>
+                    <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" required></div>
+                    <div class="form-group"><label class="form-label">Termín</label><input type="text" class="form-input"></div>
+                    <div class="form-group"><label class="form-label">Počet osob</label><input type="number" class="form-input" min="1" max="8"></div>
+                    <div class="form-group full"><label class="form-label">Zpráva</label><textarea rows="4" class="form-input"></textarea></div>
+                    <div class="form-group full"><button type="submit" class="btn-send">Odeslat poptávku</button></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="logo" style="color:white; margin-bottom:10px;">Chata Přívlaky</div>
+    <p>© 2026 Rezidence Přívlaky. Chata je v provozu celoročně.</p>
+</footer>
+
+<script>
+    const demoData = { "Červenec 2026": [1,2,3,15,16,17,20], "Srpen 2026": [10,11,12,13,28,29,30] };
+    function showPage(id) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        const link = document.getElementById('link-' + id);
+        if(link) link.classList.add('active');
+        window.scrollTo(0,0);
+        if(id === 'rezervace') renderCalendars();
+    }
+    function renderCalendars() {
+        const target = document.getElementById('calendar-container');
+        target.innerHTML = "";
+        const months = [{ name: "Červenec 2026", days: 31, start: 3 }, { name: "Srpen 2026", days: 31, start: 6 }];
+        months.forEach(m => {
+            let h = `<div><div class="month-header">${m.name}</div><div class="days-grid">`;
+            ['Po','Út','St','Čt','Pá','So','Ne'].forEach(d => h += `<div style="text-align:center;font-size:0.7rem;color:#94a3b8;font-weight:700;">${d}</div>`);
+            for(let i=1; i < m.start; i++) h += `<div></div>`;
+            const booked = demoData[m.name] || [];
+            for(let d=1; d <= m.days; d++) {
+                let s = booked.includes(d) ? "booked" : "free";
+                h += `<div class="d-cell ${s}">${d}</div>`;
+            }
+            h += `</div></div>`; target.innerHTML += h;
+        });
+    }
+    renderCalendars();
+</script>
+</body>
+</html>
