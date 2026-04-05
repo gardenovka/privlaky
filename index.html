@@ -33,10 +33,49 @@
             display: flex; justify-content: space-between; align-items: center;
             padding: 0 8%; z-index: 2000; border-bottom: 1px solid rgba(0,0,0,0.05);
         }
-        .logo { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--primary); font-weight: 900; cursor: pointer; letter-spacing: -0.5px; }
+        .logo { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--primary); font-weight: 900; cursor: pointer; letter-spacing: -0.5px; z-index: 2002; }
+        
         .nav-links { display: flex; gap: 35px; list-style: none; }
         .nav-links a { text-decoration: none; color: var(--text); font-weight: 600; font-size: 0.85rem; cursor: pointer; text-transform: uppercase; letter-spacing: 1.5px; transition: 0.3s; }
         .nav-links a:hover, .nav-links a.active { color: var(--accent); }
+
+        /* HAMBURGER MENU - SKRYTÉ NA PC */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+            z-index: 2002;
+            padding: 10px;
+        }
+        .menu-toggle span {
+            display: block;
+            width: 30px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 3px;
+            transition: 0.3s;
+        }
+
+        /* --- MOBILNÍ STYLY PRO MENU --- */
+        @media (max-width: 1024px) {
+            nav { padding: 0 5%; height: 70px; }
+            .menu-toggle { display: flex; }
+            
+            .nav-links {
+                position: fixed; top: 0; right: -100%; width: 100%; height: 100vh;
+                background: white; flex-direction: column; align-items: center;
+                justify-content: center; transition: 0.4s ease-in-out; gap: 30px;
+                box-shadow: -10px 0 30px rgba(0,0,0,0.05);
+            }
+            .nav-links.open { right: 0; }
+            .nav-links a { font-size: 1.2rem; }
+
+            /* Animace hamburgeru na křížek */
+            .menu-toggle.open span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
+            .menu-toggle.open span:nth-child(2) { opacity: 0; }
+            .menu-toggle.open span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
+        }
 
         /* --- STRÁNKY --- */
         .page { display: none; min-height: 100vh; animation: fadeIn 0.8s ease; padding-top: 90px; }
@@ -48,14 +87,14 @@
             height: 80vh; margin: 20px; border-radius: var(--radius);
             background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.2)), 
                         url('https://privlaky.cz/wp-content/uploads/2021/09/chata-privlaky-293b-1-2.jpg') center/cover;
-            display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; text-align: center;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; text-align: center; padding: 0 20px;
         }
-        .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(3rem, 7vw, 5.5rem); margin-bottom: 10px; }
+        .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 7vw, 5.5rem); margin-bottom: 10px; }
 
         /* --- OBSAH --- */
         .container { max-width: 1200px; margin: 0 auto; padding: 80px 20px; }
         .section-header { text-align: center; margin-bottom: 60px; }
-        .section-header h2 { font-family: 'Playfair Display', serif; font-size: 3.5rem; color: var(--primary); line-height: 1.1; }
+        .section-header h2 { font-family: 'Playfair Display', serif; font-size: clamp(2.2rem, 5vw, 3.5rem); color: var(--primary); line-height: 1.1; }
 
         .feature-block { display: flex; gap: 80px; align-items: center; margin-bottom: 120px; }
         .feature-block.reverse { flex-direction: row-reverse; }
@@ -64,7 +103,7 @@
         .feature-text { flex: 1; }
         .feature-text h3 { font-family: 'Playfair Display', serif; font-size: 2.2rem; margin-bottom: 20px; color: var(--accent); }
 
-        /* --- CENÍK (UPRAVENÝ) --- */
+        /* --- CENÍK --- */
         .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; margin-bottom: 40px; }
         .price-card { background: white; padding: 40px; border-radius: var(--radius); box-shadow: var(--shadow); }
         .price-card h3 { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--primary); margin-bottom: 25px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
@@ -79,7 +118,7 @@
 
         /* --- KALENDÁŘ --- */
         .cal-box { background: white; padding: 40px; border-radius: var(--radius); box-shadow: var(--shadow); }
-        .cal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .cal-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; }
         .month-header { background: var(--primary); color: white; padding: 15px; text-align: center; font-weight: 700; border-radius: 12px 12px 0 0; }
         .days-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; padding: 20px; border: 1px solid #eee; border-radius: 0 0 12px 12px; }
         .d-cell { aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center; font-weight: 700; border-radius: 8px; font-size: 0.9rem; }
@@ -96,7 +135,6 @@
         .contact-text { font-size: 1.1rem; color: #cbd5e1; }
 
         .form-side { background: white; padding: 50px; border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid #f1f5f9; }
-        .form-info-text { margin-bottom: 30px; color: var(--text-muted); font-size: 0.95rem; border-left: 3px solid var(--accent); padding-left: 20px; }
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .form-group.full { grid-column: span 2; }
         .form-label { font-size: 0.85rem; font-weight: 700; margin-bottom: 8px; color: var(--primary); display: block; }
@@ -105,9 +143,13 @@
 
         footer { background: #0f172a; color: white; padding: 40px; text-align: center; margin-top: 80px; }
 
+        /* --- ADAPTIVITA PRO MOBILY --- */
         @media (max-width: 900px) { 
-            .feature-block, .feature-block.reverse, .pricing-grid, .cal-grid, .contact-layout, .form-grid { display: flex; flex-direction: column; } 
-            .feature-img { height: 300px; }
+            .feature-block, .feature-block.reverse, .pricing-grid, .contact-layout, .form-grid { display: flex; flex-direction: column; gap: 30px; } 
+            .feature-img { height: 300px; width: 100%; }
+            .form-group.full { grid-column: auto; }
+            .hero { height: 60vh; }
+            .section-header h2 { font-size: 2.5rem; }
         }
     </style>
 </head>
@@ -115,7 +157,14 @@
 
 <nav>
     <div class="logo" onclick="showPage('home')">Chata Přívlaky</div>
-    <ul class="nav-links">
+    
+    <div class="menu-toggle" id="mobile-menu-btn" onclick="toggleMobileMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <ul class="nav-links" id="nav-menu">
         <li><a onclick="showPage('home')" id="link-home">Domů</a></li>
         <li><a onclick="showPage('info')" id="link-info">Váš úkryt</a></li>
         <li><a onclick="showPage('wellness')" id="link-wellness">Wellness</a></li>
@@ -253,18 +302,15 @@
                     <div class="p-label">Elektřina</div>
                     <div class="p-val">5 Kč / kWh</div>
                 </div>
-                <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 10px;">* Neúměrná spotřeba topného dřeva může být zpoplatněna dle uvážení majitele.</p>
             </div>
 
-            <div class="price-card" style="grid-column: span 1;">
-                <h3>Platební a storno podmínky</h3>
+            <div class="price-card">
+                <h3>Storno podmínky</h3>
                 <div class="p-item"><div class="p-label">Záloha při rezervaci</div><div class="p-val">50 %</div></div>
-                <div class="p-item"><div class="p-label">Doplatek při příjezdu</div><div class="p-val">Hotově</div></div>
                 <div style="margin-top: 15px; font-size: 0.85rem;">
-                    <strong>Storno poplatky ze zálohy:</strong><br>
-                    • 40+ dní předem: 0 % (vratná v plné výši)<br>
-                    • 14–39 dní předem: 50 %<br>
-                    • 0–13 dní předem: 100 % (záloha propadá)
+                    • 40+ dní předem: 0 % storno<br>
+                    • 14–39 dní předem: 50 % storno<br>
+                    • 0–13 dní předem: 100 % storno
                 </div>
             </div>
 
@@ -272,9 +318,6 @@
                 <h3>Důležité informace</h3>
                 <div class="p-item"><div class="p-label">Nástup na ubytování</div><div class="p-val">14:00</div></div>
                 <div class="p-item"><div class="p-label">Ukončení pobytu</div><div class="p-val">10:00</div></div>
-                <p style="margin-top: 15px; font-size: 0.85rem; color: var(--text-muted);">
-                    Speciální požadavky (počet nocí, počet osob) jsou po dohodě možné. Majitelé si vyhrazují právo na změnu cen.
-                </p>
             </div>
         </div>
     </div>
@@ -307,8 +350,6 @@
                 <form class="form-grid">
                     <div class="form-group"><label class="form-label">Jméno</label><input type="text" class="form-input" required></div>
                     <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" required></div>
-                    <div class="form-group"><label class="form-label">Termín</label><input type="text" class="form-input"></div>
-                    <div class="form-group"><label class="form-label">Počet osob</label><input type="number" class="form-input" min="1" max="8"></div>
                     <div class="form-group full"><label class="form-label">Zpráva</label><textarea rows="4" class="form-input"></textarea></div>
                     <div class="form-group full"><button type="submit" class="btn-send">Odeslat poptávku</button></div>
                 </form>
@@ -323,18 +364,37 @@
 </footer>
 
 <script>
-    const demoData = { "Červenec 2026": [1,2,3,15,16,17,20], "Srpen 2026": [10,11,12,13,28,29,30] };
+    // --- OVLÁDÁNÍ MOBILNÍHO MENU ---
+    function toggleMobileMenu() {
+        const menu = document.getElementById('nav-menu');
+        const btn = document.getElementById('mobile-menu-btn');
+        menu.classList.toggle('open');
+        btn.classList.toggle('open');
+    }
+
+    // --- PŘEPÍNÁNÍ STRÁNEK ---
     function showPage(id) {
+        // Zavře mobilní menu po kliknutí
+        document.getElementById('nav-menu').classList.remove('open');
+        document.getElementById('mobile-menu-btn').classList.remove('open');
+
+        // Přepne zobrazení sekcí
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+        
         document.getElementById(id).classList.add('active');
         const link = document.getElementById('link-' + id);
         if(link) link.classList.add('active');
+        
         window.scrollTo(0,0);
         if(id === 'rezervace') renderCalendars();
     }
+
+    // --- KALENDÁŘ ---
+    const demoData = { "Červenec 2026": [1,2,3,15,16,17,20], "Srpen 2026": [10,11,12,13,28,29,30] };
     function renderCalendars() {
         const target = document.getElementById('calendar-container');
+        if(!target) return;
         target.innerHTML = "";
         const months = [{ name: "Červenec 2026", days: 31, start: 3 }, { name: "Srpen 2026", days: 31, start: 6 }];
         months.forEach(m => {
